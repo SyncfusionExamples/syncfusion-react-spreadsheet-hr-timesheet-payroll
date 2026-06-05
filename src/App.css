@@ -1,0 +1,7 @@
+.container {
+  height: calc(100vh - 20px);
+}
+
+#root .e-sheet-tab.e-tab .e-tab-header .e-toolbar-item.e-active .e-text-wrap:before {
+  border: 0;
+}
