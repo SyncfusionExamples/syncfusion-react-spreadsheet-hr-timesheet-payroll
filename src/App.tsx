@@ -167,9 +167,9 @@ export default function App() {
     //Break
     spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '0.014', range: `${timeSheetName}!H6:H${timeSheet.rows.length}`, format: { style: { color: '#FF0000', fontWeight: 'bold' } }});
     //work hours
-    spreadsheet.conditionalFormat({ type: 'LightBlueDataBar', range: `${timeSheetName}!I6:I${timeSheet.rows.length}` });
+    spreadsheet.conditionalFormat({ type: 'GYRColorScale', range: `${timeSheetName}!I6:I${timeSheet.rows.length}` });
     //overtime hours
-    spreadsheet.conditionalFormat({ type: 'OrangeDataBar', range: `${timeSheetName}!J6:J${timeSheet.rows.length}` });
+    spreadsheet.conditionalFormat({ type: 'YGColorScale', range: `${timeSheetName}!J6:J${timeSheet.rows.length}` });
     //formula update for permissions, work hours and overtime
     for (let row = 5; row <= timeSheet.rows.length - 1; row++) {
       //permission formula
@@ -397,8 +397,6 @@ export default function App() {
     const keyHeaders: string[] = ['WORKFORCE EFFICIENCY','ATTENDANCE RISK','PAYROLL SUMMARY', 'COST DRIVER'];
     const employeeRiskSummary: string[] = ['Emp ID','Name','Department','Total OT(hrs)','Avg Work/day','Leave Days','Late Logins','Risk Score','Risk Level','Key Issue'];
     const keyMetricsValues: string[] = ['Low Hour Employees','High OT Employees','High Leave Employees','Frequent Late Logins','Avg Net Salary','Social Contribution','Total Deduction', 'OT Cost % of Payroll'];
-    const headerStyle: CellStyleModel = { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', textIndent:'30px' };
-    const subHeaderValueStyle: CellStyleModel = { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold' };
     const subHeaderStyle: CellStyleModel = { textAlign: 'center', verticalAlign: 'middle', fontSize: '10pt', backgroundColor: '#fff'};
     const headerTileStyle: CellStyleModel = { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#7A3DB5', fontWeight:'bold' };
     const employeeDataStyle: CellStyleModel = { textAlign: 'center', verticalAlign: 'middle', fontSize: '11pt', backgroundColor:'#fff', color:'#2F3E73', fontWeight:'bold' };
@@ -555,7 +553,7 @@ export default function App() {
     saveUrl='https://document.syncfusion.com/web-services/spreadsheet-editor/api/spreadsheet/save'
     ref={(ssObj: Spreadsheet) => { spreadsheet = ssObj }} created={onCreated.bind(this)}
     dataSourceChanged={dataSourceChanged}
-    cellStyle={{ textAlign: 'center', verticalAlign: 'middle', backgroundColor:'#F5F7FB' }} //Green - #F0FDF4, lavender - #F7F5FF , grey- #F5F7FB
+    cellStyle={{ textAlign: 'center', verticalAlign: 'middle', backgroundColor:'#F5F7FB' }}
   >
   <SheetsDirective>
     <SheetDirective name='Dashboard' showGridLines={false}></SheetDirective>
