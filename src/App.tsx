@@ -1,8 +1,7 @@
 import { getCell, getColumn, getFormatFromType, getSheet, setCell, SheetDirective, SheetsDirective, Spreadsheet, SpreadsheetComponent, type CellModel, type CellStyleModel, type ChartModel, type RowModel, type SheetModel, type SortDescriptor } from '@syncfusion/ej2-react-spreadsheet';
-import { attendanceRateImage, averageNetSalaryImage, averageWorkImage, dollarImage, employeeData, highLeaveEmployeeImage, highOtEmployeeImage, LateLoginImage, lowHrsEmployeeImage, OtpercentImage, overtimeHrsImage, overtimePayImage, socialContributionImage, totalDeductionImage, totalEmployeeImage, updatedTimeSheet, workingHrsImage } from './Data'
+import { attendanceRateImage, averageNetSalaryImage, averageWorkImage, dollarImage, employeeData, highLeaveEmployeeImage, highOtEmployeeImage, LateLoginImage, lowHrsEmployeeImage, OtpercentImage, overtimeHrsImage, overtimePayImage, socialContributionImage, totalDeductionImage, totalEmployeeImage, timeSheetData, workingHrsImage } from './Data'
 
 export default function App() {
-  
   //initializing spreadsheet
   let spreadsheet: Spreadsheet;
   //Global variable to load data based on sheet
@@ -16,6 +15,7 @@ export default function App() {
   const headerStyle: CellStyleModel = { fontSize: '14pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#001A4A', color: '#fff', fontWeight: 'bold' };
   //created function
   const onCreated = (): void => {
+    spreadsheet.showSpinner();
     setFormats();
     setRowColumnSize();
     spreadsheet.updateRange({ dataSource: employeeData as any, startCell: 'A5' }, 1);
@@ -27,22 +27,23 @@ export default function App() {
       if (dataLoaded === 'EmployeeMaster') {
         initiateEmployeeSheet();
         dataLoaded = 'TimeSheet';
-        spreadsheet.updateRange({ dataSource: updatedTimeSheet as any, startCell: 'A5' }, 2);
+        spreadsheet.updateRange({ dataSource: timeSheetData as any, startCell: 'A5' }, 2);
       }
       else if (dataLoaded === 'TimeSheet') {
         initiateTimeSheet();
         initiatePayrollSheet();
         initiateDataSheet();
         initiateDashboardSheet();
+        spreadsheet.hideSpinner();
       }
     }
   }
  
   const setRowColumnSize: Function = (): void => {
     //set the row height
-    spreadsheet.setRowsHeight(30, [`${employeeSheetName}!1:57`, `${timeSheetName}!1:1280`, `${payrollSheetName}!1:56`, `${dashboardSheetName}!1:20`,]);
+    spreadsheet.setRowsHeight(30, [`${employeeSheetName}!1:57`, `${timeSheetName}!1:1280`, `${payrollSheetName}!1:56`, `${dashboardSheetName}!1:20`]);
     spreadsheet.setRowsHeight(40, [`${dashboardSheetName}!16`, `${dashboardSheetName}!21:22`]);
-    spreadsheet.setRowsHeight(35, [`${dashboardSheetName}!23:27`])
+    spreadsheet.setRowsHeight(35, [`${dashboardSheetName}!23:27`]);
     //set the column width
     spreadsheet.setColumnsWidth(100, [`${employeeSheetName}!A:H`, `${timeSheetName}!A:K`, `${payrollSheetName}!A:M`]);
     spreadsheet.setColumnsWidth(30, [`${dashboardSheetName}!A`]);
@@ -57,12 +58,10 @@ export default function App() {
     const employeeSheet: SheetModel = getSheet(spreadsheet, 1);
     const timeSheet: SheetModel = getSheet(spreadsheet, 2);
     const payrollSheet: SheetModel = getSheet(spreadsheet, 3);
-    //Employee Sheet Formats
     //set header value
     setCell(0, 0, employeeSheet, { value: 'EMPLOYEE MASTER SHEET- HR PAYROLL AND TIMESHEET APPLICATION', colSpan: 8, rowSpan: 3, style: headerStyle });
     //updating styles to headers
     for (let columnHeader = 0; columnHeader < 8; columnHeader++) {
-      //setCell(4, columnHeader, employeeSheet, { style: columnHeaderStyle });
       if (columnHeader < 2) {
         setCell(4, columnHeader, employeeSheet, { style: { fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#1E3A8A', color: '#fff', fontWeight: 'bold' } });
       } else if (columnHeader < 4) {
@@ -78,7 +77,6 @@ export default function App() {
     //Time Sheet Formats
     //updating styles to timesheet headers
     for (let columnHeader = 0; columnHeader <= 10; columnHeader++) {
-      //setCell(4, columnHeader, timeSheet, { style: columnHeaderStyle });
       if (columnHeader < 2) {
         setCell(4, columnHeader, timeSheet, { style: { fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#1E3A8A', color: '#fff', fontWeight: 'bold' } });
       } else if (columnHeader < 5) {
@@ -142,11 +140,11 @@ export default function App() {
     //get the sheet
     const timeSheet: SheetModel = getSheet(spreadsheet, 2);
     const timesheetGroupHeaders: string[] = ["ATTENDANCE IDENITIFICATION", "TIME TRACKING", "PERMISSIONS", "WORK SUMMARY", "LEAVE"];
-    setCell(3, 0, timeSheet, { value: timesheetGroupHeaders[0], colSpan:2, style:{ fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#1E40AF', color: '#fff', fontWeight: 'bold' }});
-    setCell(3, 2, timeSheet, { value: timesheetGroupHeaders[1], colSpan:3, style:{ fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#6D28D9', color: '#fff', fontWeight: 'bold' }});
-    setCell(3, 5, timeSheet, { value: timesheetGroupHeaders[2], colSpan:3, style:{ fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#0EA5E9', color: '#fff', fontWeight: 'bold' }});
-    setCell(3, 8, timeSheet, { value: timesheetGroupHeaders[3], colSpan:2, style:{ fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#CA8A04', color: '#fff', fontWeight: 'bold' }});
-    setCell(3, 10, timeSheet, { value: timesheetGroupHeaders[4], style:{ fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#EA580C', color: '#fff', fontWeight: 'bold' }});
+    setCell(3, 0, timeSheet, { value: timesheetGroupHeaders[0], colSpan: 2, style: { fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#1E40AF', color: '#fff', fontWeight: 'bold' } });
+    setCell(3, 2, timeSheet, { value: timesheetGroupHeaders[1], colSpan: 3, style: { fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#6D28D9', color: '#fff', fontWeight: 'bold' } });
+    setCell(3, 5, timeSheet, { value: timesheetGroupHeaders[2], colSpan: 3, style: { fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#0EA5E9', color: '#fff', fontWeight: 'bold' } });
+    setCell(3, 8, timeSheet, { value: timesheetGroupHeaders[3], colSpan: 2, style: { fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#CA8A04', color: '#fff', fontWeight: 'bold' } });
+    setCell(3, 10, timeSheet, { value: timesheetGroupHeaders[4], style: { fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#EA580C', color: '#fff', fontWeight: 'bold' } });
     //leave
     spreadsheet.conditionalFormat({ type: 'EqualTo', value: 'CL', range: `${timeSheetName}!K6:K${timeSheet.rows.length}`, format: { style: { backgroundColor: '#4CAF50' } } });
     spreadsheet.conditionalFormat({ type: 'EqualTo', value: 'LOP', range: `${timeSheetName}!K6:K${timeSheet.rows.length}`, format: { style: { backgroundColor: '#ff0000' } } });
@@ -154,33 +152,32 @@ export default function App() {
     //conditional formattings
     spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '9:30', range: `${timeSheetName}!C6:C${timeSheet.rows.length}`, format: { style: { color: '#ff0000', fontWeight: 'bold' } } });
     spreadsheet.conditionalFormat({ type: 'LessThan', value: '9:31', range: `${timeSheetName}!C6:C${timeSheet.rows.length}`, format: { style: { color: '#4CAF50', fontWeight: 'bold' } } });
-    spreadsheet.conditionalFormat({ type: 'LessThan', value: '17:31', range: `${timeSheetName}!D6:D${timeSheet.rows.length}`, format: { style: { color: '#ff0000', fontWeight: 'bold' } } });
-    spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '17:30', range: `${timeSheetName}!D6:D${timeSheet.rows.length}`, format: { style: { color: '#4CAF50', fontWeight: 'bold' } } });
-    //Lunch
-    spreadsheet.cellFormat({backgroundColor:'#f1deab'},`${timeSheetName}!E6:E${timeSheet.rows.length}`);
+    spreadsheet.conditionalFormat({ type: 'LessThan', value: '18:01', range: `${timeSheetName}!D6:D${timeSheet.rows.length}`, format: { style: { color: '#ff0000', fontWeight: 'bold' } } });
+    spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '18:00', range: `${timeSheetName}!D6:D${timeSheet.rows.length}`, format: { style: { color: '#4CAF50', fontWeight: 'bold' } } });
     //late hrs
     spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '0', range: `${timeSheetName}!F6:F${timeSheet.rows.length}`, format: { style: { color: '#FF0000', fontWeight: 'bold' } } });
     //Permission
-    spreadsheet.conditionalFormat({ type: 'LessThan', value: '1:01', range: `${timeSheetName}!G6:G${timeSheet.rows.length}`, format: { style: { color: '#4CAF50', fontWeight: 'bold' } } });
-    spreadsheet.conditionalFormat({ type: 'Between', value: '1:01,2:01', range: `${timeSheetName}!G6:G${timeSheet.rows.length}`, format: { style: { color: '#FFC107', fontWeight: 'bold' } } });
-    spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '2:00', range: `${timeSheetName}!G6:G${timeSheet.rows.length}`, format: { style: { color: '#FF0000', fontWeight: 'bold' } } });
+    spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '0', range: `${timeSheetName}!H6:H${timeSheet.rows.length}`, format: { style: { color: '#FF0000', fontWeight: 'bold' } } });
     //Break
-    spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '0.014', range: `${timeSheetName}!H6:H${timeSheet.rows.length}`, format: { style: { color: '#FF0000', fontWeight: 'bold' } }});
+    spreadsheet.conditionalFormat({ type: 'GreaterThan', value: '0.020834', range: `${timeSheetName}!G6:G${timeSheet.rows.length}`, format: { style: { color: '#FF0000', fontWeight: 'bold' } }});
     //work hours
     spreadsheet.conditionalFormat({ type: 'GYRColorScale', range: `${timeSheetName}!I6:I${timeSheet.rows.length}` });
     //overtime hours
     spreadsheet.conditionalFormat({ type: 'YGColorScale', range: `${timeSheetName}!J6:J${timeSheet.rows.length}` });
     //formula update for permissions, work hours and overtime
     for (let row = 5; row <= timeSheet.rows.length - 1; row++) {
-      //permission formula
+      //late hr formula
       setCell(row, 5, timeSheet, { formula: `=IF(C${row + 1}="-","-",IF(C${row + 1}>TIME(9,30,0),C${row + 1} - TIME(9,30,0),0))`, format: 'h:mm' });
+      const permission = timeSheet.rows[row].cells[7].value;
+      //permission hrs
+      setCell(row, 7, timeSheet, { formula: `=IF(F${row + 1}="-","-",IF(OR(F${row + 1}>0,G${row + 1}>TIME(0,30,0)),ROUND(${permission}+F${row + 1}+(G${row + 1}-TIME(0,30,0)),6),${permission}))`, format: 'h:mm' });
       //workhour formula
-      setCell(row, 8, timeSheet, { formula: `=IF(C${row + 1}="-","-",(D${row + 1}-C${row + 1})-(E${row + 1}+F${row + 1}+G${row + 1}+H${row + 1}))`, format: 'h:mm' });
+      setCell(row, 8, timeSheet, { formula: `=IF(C${row + 1}="-","-",((D${row + 1}-C${row + 1})-(E${row + 1}+F${row + 1}+H${row + 1})))`, format: 'h:mm' });
       //overtime formula
-      setCell(row, 9, timeSheet, { formula: `=IF(I${row + 1}="-","-",IF(I${row + 1}>TIME(7,30,0),I${row + 1}-TIME(7,30,0),0))`, format: 'h:mm' });
+      setCell(row, 9, timeSheet, { formula: `=IF(I${row + 1}="-","-",IF(I${row + 1}>TIME(8,0,0),I${row + 1}-TIME(8,0,0),0))`, format: 'h:mm' });
       //LOP formula update
       if (timeSheet.rows[row].cells[10].value == "None") {
-        setCell(row, 10, timeSheet, { formula: `=IF(G${row + 1}>0,IF(SUMIFS(G6:G${row},B6:B${row},B${row + 1})>=0.125,"LOP","None"),"None")` });
+        setCell(row, 10, timeSheet, { formula: `=IF(H${row + 1}>0,IF(SUMIFS(H6:H${row},B6:B${row},B${row + 1})>=TIME(3,0,0),"LOP","None"),"None")` });
       }
     }
     //add data validation
@@ -189,9 +186,12 @@ export default function App() {
     spreadsheet.setBorder({ border: '1px solid #f2f2f2' }, `${timeSheetName}!A6:J${timeSheet.rows.length}`, 'Horizontal');
     spreadsheet.setBorder({ border: '1px solid #f2f2f2' }, `${timeSheetName}!A6:J${timeSheet.rows.length}`, 'Vertical');
     spreadsheet.setBorder({ border: '1px solid #fff' }, `${timeSheetName}!A1:J5`);
-    //color formatting for cells
-    spreadsheet.numberFormat('d/m/yyyy',`${timeSheetName}!A6:A${timeSheet.rows.length}`);
-    spreadsheet.cellFormat({backgroundColor:'#fff'},`${timeSheetName}!A6:D${timeSheet.rows.length} F6:K${timeSheet.rows.length}`);
+    //number format to cells
+    spreadsheet.numberFormat('d/m/yyyy', `${timeSheetName}!A6:A${timeSheet.rows.length}`);
+    spreadsheet.numberFormat('h:mm', `${timeSheetName}!G6:G${timeSheet.rows.length}`);
+    //color formatting to cells
+    spreadsheet.cellFormat({ color: '#4CAF50', fontWeight: 'bold' }, `${timeSheetName}!E6:H${timeSheet.rows.length} `);
+    spreadsheet.cellFormat({backgroundColor:'#fff'},`${timeSheetName}!E6:E${timeSheet.rows.length} A6:D${timeSheet.rows.length} F6:K${timeSheet.rows.length}`);
   }
 
   //Payroll Calculations
@@ -210,7 +210,7 @@ export default function App() {
     setCell(3, 10, payrollSheet, { value: payrollGroupHeaders[4], colSpan: 2, style:{ fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#DC2626', color: '#fff', fontWeight: 'bold' } });
     setCell(3, 12, payrollSheet, { value: payrollGroupHeaders[5], style:{ fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#22C55E', color: '#fff', fontWeight: 'bold' } });
     //payroll sheet header update
-    const payrollHeaders: string[] = ['Employee Id', 'Department', 'Base Salary', 'Total Hours', 'OT Hours', 'OT Pay', 'Leave Days', 'Leave Deduction', 'Social\nContribution %', 'Social\nContribution', 'Tax%', 'Tax', 'Net Salary'];
+    const payrollHeaders: string[] = ['Employee Id', 'Department', 'Base Salary', 'Total Hours', 'OT Hours', 'OT Pay', 'Leave Days', 'Leave Deduction', 'Employee\nContribution %', 'Employee\nContribution', 'Tax%', 'Tax', 'Net Salary'];
     payrollHeaders.forEach((value, index) => {
       if (index < 3) {
         setCell(4, index, payrollSheet, { value: value, style: { fontSize: '12pt', textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#1E3A8A', color: '#fff', fontWeight: 'bold' } });
@@ -231,36 +231,38 @@ export default function App() {
       //employee id
       setCell(row, 0, payrollSheet, { formula: `=${employeeSheetName}!A${row + 1}`, style: { color: '#2549BE', fontWeight: 'bold' } });
       //department
-      setCell(row, 1, payrollSheet, { formula: `=${employeeSheetName}!C${row + 1}`, style: { fontWeight: 'bold' } });
+      setCell(row, 1, payrollSheet, { formula: `=${employeeSheetName}!C${row + 1}` });
       //base salary
-      setCell(row, 2, payrollSheet, { formula: `=VLOOKUP(A${row + 1},${employeeSheetName}!A1:G56,6,FALSE)`, format: getFormatFromType('Currency') });
+      setCell(row, 2, payrollSheet, { formula: `=VLOOKUP(A${row + 1},${employeeSheetName}!A1:G56,6,FALSE)`, format:'$#,##0_);($#,##0)'});
       //total hours
       setCell(row, 3, payrollSheet, { formula: `=SUMIFS(${timeSheetName}!I1:I${timeSheet.rows.length},${timeSheetName}!B1:B${timeSheet.rows.length},A${row + 1})`, format: '[h]:mm' });
       //ot hours
       setCell(row, 4, payrollSheet, { formula: `=SUMIFS(Timesheet!J6:J${timeSheet.rows.length},Timesheet!B6:B${timeSheet.rows.length},A${row + 1})`, format: '[h]:mm' });
       //ot pay
-      setCell(row, 5, payrollSheet, { formula: `=E${row + 1}*24*((C${row + 1}/240)*1.5)`, style: { color: '#1F3A6D', fontWeight: 'bold' } });
+      setCell(row, 5, payrollSheet, { formula: `=E${row + 1}*24*((C${row + 1}/240)*1.5)`, format:'$#,##0_);($#,##0)', style: { color: '#1F3A6D', fontWeight: 'bold' } });
       //leave days
       setCell(row, 6, payrollSheet, { formula: `=COUNTIFS(Timesheet!K6:K${timeSheet.rows.length},"LOP",Timesheet!B6:B${timeSheet.rows.length},A${row + 1})` });
       //leave deduction
-      setCell(row, 7, payrollSheet, { formula: `=(C${row + 1}/30)*G${row + 1}` });
-      //social contribution %
+      setCell(row, 7, payrollSheet, { formula: `=(C${row + 1}/30)*G${row + 1}`, format:'$#,##0_);($#,##0)' });
+      //employee contribution %
       if (row === 7 || row === 9 || row === 11 || row === 14 || row === 17 || row === 19 || row === 25 || row === 37 || row === 42) {
         setCell(row, 8, payrollSheet, { value: '0.13', format: `${getFormatFromType('Percentage')}`, style: { color: '#2F6FCC', fontWeight: 'bold' } });
       } else {
         setCell(row, 8, payrollSheet, { value: '0.12', format: `${getFormatFromType('Percentage')}`, style: { color: '#2F6FCC', fontWeight: 'bold' } });
       }
       //Contribution
-      setCell(row, 9, payrollSheet, { formula: `=C${row + 1}*I${row + 1}`, format: `${getFormatFromType('Currency')}`, style: { color: '#2F6FCC', fontWeight: 'bold' } });
+      setCell(row, 9, payrollSheet, { formula: `=C${row + 1}*I${row + 1}`, format:'$#,##0_);($#,##0)', style: { color: '#2F6FCC', fontWeight: 'bold' } });
       //Tax %
       setCell(row, 10, payrollSheet, { formula: `=IF(C${row + 1}*12<=17700,0.10,IF(C${row + 1}*12<=67450,0.12,IF(C${row + 1}*12<=105700,0.22,IF(C${row + 1}*12<=201750,0.24,IF(C${row + 1}*12<=256200,0.32,IF(C${row + 1}*12<=640600,0.35,0.37))))))`, format: `${getFormatFromType('Percentage')}`, style: { backgroundColor: '#EFE6D8', color: '#D35400', fontWeight: 'bold' } });
       //Tax
-      setCell(row, 11, payrollSheet, { formula: `=C${row + 1}*K${row + 1}`, format: `${getFormatFromType('Currency')}`, style: { backgroundColor: '#EFE6D8', color: '#D35400', fontWeight: 'bold' } });
+      setCell(row, 11, payrollSheet, { formula: `=C${row + 1}*K${row + 1}`, format:'$#,##0_);($#,##0)', style: { backgroundColor: '#EFE6D8', color: '#D35400', fontWeight: 'bold' } });
       //net salary
-      setCell(row, 12, payrollSheet, { formula: `=C${row + 1}+F${row + 1}-(H${row + 1}+J${row + 1}+L${row + 1})`, style: { fontWeight: 'bold' } });
+      setCell(row, 12, payrollSheet, { formula: `=C${row + 1}+F${row + 1}-(H${row + 1}+J${row + 1}+L${row + 1})`, format:'$#,##0_);($#,##0)', style: { fontWeight: 'bold' } });
     }
     //Data bar
     spreadsheet.conditionalFormat({ type: 'GreenDataBar', range: `${payrollSheetName}!C6:C${payrollSheet.rows.length}` });
+    //ot pay
+    spreadsheet.conditionalFormat({ type: 'BWRColorScale', range: `${payrollSheetName}!F6:F${payrollSheet.rows.length}` });
     //Leave Days
     spreadsheet.conditionalFormat({ type: 'RYGColorScale', range: `${payrollSheetName}!G6:G${payrollSheet.rows.length}` });
     //net salary
@@ -308,31 +310,31 @@ export default function App() {
     department.forEach((value: string, index: number) => {
       setCell(3 + index, 0, dataSheet, { value: value });
       //formula for the standard payroll cost
-      setCell(3 + index, 1, dataSheet, { formula:`=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A${4 + index },${payrollSheetName}!M6:M${payrollSheetLastRow})` , format:getFormatFromType('Currency')});
+      setCell(3 + index, 1, dataSheet, { formula:`=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A${4 + index },${payrollSheetName}!C6:C${payrollSheetLastRow})+B${10 + index}-SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A${4 + index },${payrollSheetName}!H6:H${payrollSheetLastRow})` , format:getFormatFromType('Currency')});
       setCell(9 + index, 0, dataSheet, { value: value });
       setCell(19 + index, 0, dataSheet, { value: value });
     });
     //OT Hrs Distribution
-    const otHrs: string[] = ['<2Hrs','2-4Hrs','>4Hrs'];
+    const otHrs: string[] = ['<5Hrs','5-8Hrs','>8Hrs'];
     otHrs.forEach((value: string, index: number) => {
       setCell(3 + index, 2, dataSheet, { value: value });
     });
-    //othrs
+    //ot hrs
     setCell(3, 3, dataSheet, {
-      formula: `=COUNTIFS(Data!I6:I${employeeSheet.rows.length - 1}, "<0.0833")`
+      formula: `=COUNTIFS(Data!I6:I${employeeSheet.rows.length - 1}, "<"&5/24)`
     });
     setCell(4, 3, dataSheet, {
-      formula: `=COUNTIFS(Data!I6:I${employeeSheet.rows.length - 1}, ">=0.0833", Data!I6:I${employeeSheet.rows.length - 1}, "<=0.1667")`
+      formula: `=COUNTIFS(Data!I6:I${employeeSheet.rows.length - 1}, ">="&5/24, Data!I6:I${employeeSheet.rows.length - 1}, "<="&8/24)`
     });
     setCell(5, 3, dataSheet, {
-      formula: `=COUNTIFS(Data!I6:I${employeeSheet.rows.length - 1}, ">0.1667")`
+      formula: `=COUNTIFS(Data!I6:I${employeeSheet.rows.length - 1}, ">"&8/24)`
     });
 
     //formulas for ot hrs
-    setCell(9, 1, dataSheet, { formula: `=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A10, ${payrollSheetName}!F6:F${payrollSheetLastRow})`, format:'$#,##0_);($#,##0)'});
-    setCell(10, 1, dataSheet, { formula: `=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A11,${payrollSheetName}!F6:F${payrollSheetLastRow})`, format:'$#,##0_);($#,##0)'});
-    setCell(11, 1, dataSheet, { formula: `=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A12,${payrollSheetName}!F6:F${payrollSheetLastRow})`, format:'$#,##0_);($#,##0)'});
-    setCell(12, 1, dataSheet, { formula: `=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A13,${payrollSheetName}!F6:F${payrollSheetLastRow})`, format:'$#,##0_);($#,##0)'});
+    setCell(9, 1, dataSheet, { formula: `=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A10, ${payrollSheetName}!F6:F${payrollSheetLastRow})`, format: '$#,##0_);($#,##0)' });
+    setCell(10, 1, dataSheet, { formula: `=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A11,${payrollSheetName}!F6:F${payrollSheetLastRow})`, format: '$#,##0_);($#,##0)' });
+    setCell(11, 1, dataSheet, { formula: `=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A12,${payrollSheetName}!F6:F${payrollSheetLastRow})`, format: '$#,##0_);($#,##0)' });
+    setCell(12, 1, dataSheet, { formula: `=SUMIF(${payrollSheetName}!B6:B${payrollSheetLastRow},A13,${payrollSheetName}!F6:F${payrollSheetLastRow})`, format: '$#,##0_);($#,##0)' });
     //Employee Average working %
     const employeeAverageWorking = ['<7Hrs','7-7.5Hrs','>7.5Hrs'];
     employeeAverageWorking.forEach((value: string, index: number) => {
@@ -340,9 +342,9 @@ export default function App() {
     });
 
     //formulas for average working %
-    setCell(9, 3, dataSheet, { formula: `=COUNTIFS(H6:H${employeeSheetLastRow - 1}, "<"&7/24)` });
-    setCell(10, 3, dataSheet, { formula: `=COUNTIFS(H6:H${employeeSheetLastRow - 1}, ">="&7/24, H6:H${employeeSheetLastRow - 1}, "<="&7.5/24)` });
-    setCell(11, 3, dataSheet, { formula: `=COUNTIFS(H6:H${employeeSheetLastRow - 1}, ">"&7.5/24)` });
+    setCell(9, 3, dataSheet, { formula: `=COUNTIFS(H6:H${employeeSheetLastRow - 1}, "<"&6/24)` });
+    setCell(10, 3, dataSheet, { formula: `=COUNTIFS(H6:H${employeeSheetLastRow - 1}, ">="&6/24, H6:H${employeeSheetLastRow - 1}, "<="&8/24)` });
+    setCell(11, 3, dataSheet, { formula: `=COUNTIFS(H6:H${employeeSheetLastRow - 1}, ">"&8/24)` });
     //Employee Data Summarized
     const employeeMetric = ['EmpId','Name','Department','Avg Work Hrs','Total OT Hrs','Leaves Taken','Late Login','Risk Score'];
     employeeMetric.forEach((value: string, index: number) => {
@@ -378,7 +380,7 @@ export default function App() {
     setCell(16, 1 , dataSheet, { formula:`=COUNTIFS(${timeSheetName}!K6:K${timeSheetLastRow},"LOP")` });
     //formulas for dept wise risk
     for (let rowNumber: number = 19; rowNumber < 23; rowNumber++) {
-      setCell(rowNumber, 1, dataSheet, { formula: `=AVERAGEIFS(L6:L${dataSheet.rows.length}, G6:G${dataSheet.rows.length}, A${rowNumber + 1})`, format: '0' });
+      setCell(rowNumber, 1, dataSheet, { formula: `=AVERAGEIFS(L6:L${dataSheet.rows.length}, G6:G${dataSheet.rows.length}, A${rowNumber + 1})/100`, format: '0%' });
     }
   }
 
@@ -396,25 +398,25 @@ export default function App() {
     const keyMetrics: string[] = ['Total Worked Hours','Total Payroll Cost' , 'Total OT Hours','Total OT Cost','Avg Work Hrs/Day', 'Attendance Rate', 'Total Employees'];
     const keyHeaders: string[] = ['WORKFORCE EFFICIENCY','ATTENDANCE RISK','PAYROLL SUMMARY', 'COST DRIVER'];
     const employeeRiskSummary: string[] = ['Emp ID','Name','Department','Total OT(hrs)','Avg Work/day','Leave Days','Late Logins','Risk Score','Risk Level','Key Issue'];
-    const keyMetricsValues: string[] = ['Low Hour Employees','High OT Employees','High Leave Employees','Frequent Late Logins','Avg Net Salary','Social Contribution','Total Deduction', 'OT Cost % of Payroll'];
+    const keyMetricsValues: string[] = ['Low Hour Employees','High OT Employees','High Leave Employees','Frequent Late Logins','Avg Net Salary','Employee Contribution','Total Deduction', 'OT Cost % of Payroll'];
     const subHeaderStyle: CellStyleModel = { textAlign: 'center', verticalAlign: 'middle', fontSize: '10pt', backgroundColor: '#fff'};
     const headerTileStyle: CellStyleModel = { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#7A3DB5', fontWeight:'bold' };
     const employeeDataStyle: CellStyleModel = { textAlign: 'center', verticalAlign: 'middle', fontSize: '11pt', backgroundColor:'#fff', color:'#2F3E73', fontWeight:'bold' };
     //dashboard sheet cell format
-    spreadsheet.cellFormat({backgroundColor:'#fff'},`${dashboardSheetName}!L19:Q19 S19:U19`);
-    setCell(1, 1, dashboardSheet, { value: keyMetrics[0], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#23A26D', fontWeight:'bold', textIndent:'30px' }});
-    setCell(1, 4, dashboardSheet, { value: keyMetrics[1], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#2E80C7', fontWeight:'bold', textIndent:'30px' }});
-    setCell(1, 7, dashboardSheet, { value: keyMetrics[2], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#EF4B4B', fontWeight:'bold', textIndent:'30px' }});
-    setCell(1, 10, dashboardSheet, { value: keyMetrics[3], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#F57C1F', fontWeight:'bold', textIndent:'30px' }});
-    setCell(1, 13, dashboardSheet, { value: keyMetrics[4], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#33A9C9', fontWeight:'bold', textIndent:'30px' }});
-    setCell(1, 16, dashboardSheet, { value: keyMetrics[5], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:' #3BB054', fontWeight:'bold', textIndent:'30px' } });
-    setCell(1, 19, dashboardSheet, { value: keyMetrics[6], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#B54AD6', fontWeight:'bold', textIndent:'30px' } });
+    spreadsheet.cellFormat({ backgroundColor: '#fff' }, `${dashboardSheetName}!L19:Q19 S19:U19`);
+    setCell(1, 1, dashboardSheet, { value: keyMetrics[0], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', color: '#23A26D', fontWeight: 'bold', textIndent: '30px' } });
+    setCell(1, 4, dashboardSheet, { value: keyMetrics[1], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', color: '#2E80C7', fontWeight: 'bold', textIndent: '30px' } });
+    setCell(1, 7, dashboardSheet, { value: keyMetrics[2], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', color: '#EF4B4B', fontWeight: 'bold', textIndent: '30px' } });
+    setCell(1, 10, dashboardSheet, { value: keyMetrics[3], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', color: '#F57C1F', fontWeight: 'bold', textIndent: '30px' } });
+    setCell(1, 13, dashboardSheet, { value: keyMetrics[4], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', color: '#33A9C9', fontWeight: 'bold', textIndent: '30px' } });
+    setCell(1, 16, dashboardSheet, { value: keyMetrics[5], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', color: ' #3BB054', fontWeight: 'bold', textIndent: '30px' } });
+    setCell(1, 19, dashboardSheet, { value: keyMetrics[6], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', color: '#B54AD6', fontWeight: 'bold', textIndent: '30px' } });
     //populating data tiles
     let index: number = 0;
-    setCell(15, 1, dashboardSheet, { value: keyHeaders[0], colSpan: 4, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#1E5CCB', fontWeight: 'bold', color:'#fff'} });
-    setCell(15, 6, dashboardSheet, { value: keyHeaders[1], colSpan: 4, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#2E8B57', fontWeight: 'bold', color:'#fff' } });
-    setCell(15, 11, dashboardSheet, { value: keyHeaders[2], colSpan: 6, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#7A3DB5', fontWeight: 'bold', color:'#fff' } });
-    setCell(15, 18, dashboardSheet, { value: keyHeaders[3], colSpan: 3, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#F97316', fontWeight: 'bold', color:'#fff' } });
+    setCell(15, 1, dashboardSheet, { value: keyHeaders[0], colSpan: 4, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#1E5CCB', fontWeight: 'bold', color: '#fff' } });
+    setCell(15, 6, dashboardSheet, { value: keyHeaders[1], colSpan: 4, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#2E8B57', fontWeight: 'bold', color: '#fff' } });
+    setCell(15, 11, dashboardSheet, { value: keyHeaders[2], colSpan: 6, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#7A3DB5', fontWeight: 'bold', color: '#fff' } });
+    setCell(15, 18, dashboardSheet, { value: keyHeaders[3], colSpan: 3, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#F97316', fontWeight: 'bold', color: '#fff' } });
     setCell(16, 1, dashboardSheet, { value: keyMetricsValues[0], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color: '#F39C12' } });
     setCell(16, 3, dashboardSheet, { value: keyMetricsValues[1], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color: '#ff0000' } });
     setCell(16, 6, dashboardSheet, { value: keyMetricsValues[2], colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color: '#ff0000' } });
@@ -422,16 +424,16 @@ export default function App() {
     setCell(16, 11, dashboardSheet, { value: keyMetricsValues[4], colSpan: 2, style: headerTileStyle });
     setCell(16, 13, dashboardSheet, { value: keyMetricsValues[5], colSpan: 2, style: headerTileStyle });
     setCell(16, 15, dashboardSheet, { value: keyMetricsValues[6], colSpan: 2, style: headerTileStyle });
-    setCell(16, 18, dashboardSheet, { value: keyMetricsValues[7], colSpan: 3, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color: '#EA580C' }  });
+    setCell(16, 18, dashboardSheet, { value: keyMetricsValues[7], colSpan: 3, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color: '#EA580C' } });
     //adding formulas to the data sheet
     //total worked hrs
     setCell(2, 1, dashboardSheet, { formula: `=SUM(${payrollSheetName}!D6:D${payrollSheet.rows.length})`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#23A26D', fontWeight:'bold', textIndent:'30px' }});
     //total payroll cost
-    setCell(2, 4, dashboardSheet, { formula: `=SUM(${payrollSheetName}!M6:M${payrollSheet.rows.length})`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#2E80C7', fontWeight:'bold', textIndent:'30px' } });
+    setCell(2, 4, dashboardSheet, { formula: `=SUM(${payrollSheetName}!C6:C${payrollSheet.rows.length})+SUM(${payrollSheetName}!F6:F${payrollSheet.rows.length})-SUM(${payrollSheetName}!H6:H${payrollSheet.rows.length})`, colSpan: 2, format:'$#,##0_);($#,##0)', style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#2E80C7', fontWeight:'bold', textIndent:'30px' } });
     //total ot hrs
     setCell(2, 7, dashboardSheet, { formula: `=SUM(${payrollSheetName}!E6:E${payrollSheet.rows.length})`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#EF4B4B', fontWeight:'bold', textIndent:'30px' } });
     //total ot pay
-    setCell(2, 10, dashboardSheet, { formula: `=SUM(${payrollSheetName}!F6:F${payrollSheet.rows.length})`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#F57C1F', fontWeight:'bold', textIndent:'30px' } });
+    setCell(2, 10, dashboardSheet, { formula: `=SUM(${payrollSheetName}!F6:F${payrollSheet.rows.length})`, colSpan: 2, format:'$#,##0_);($#,##0)', style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#F57C1F', fontWeight:'bold', textIndent:'30px' } });
     //avg work hr/day
     setCell(2, 13, dashboardSheet, { formula: `=AVERAGE(${dataSheetName}!H6:H${dataSheet.rows.length})`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor:'#fff', color:'#33A9C9', fontWeight:'bold', textIndent:'30px' } });
     //attendance rate
@@ -443,28 +445,28 @@ export default function App() {
     //lowhr - data
     setCell(18, 1, dashboardSheet, { value: '<7 hrs/day', colSpan: 2, style: subHeaderStyle, image: lowHrsEmployeeImage });
     //high ot employees
-    setCell(17, 3, dashboardSheet, { formula: `=COUNTIFS(Data!I6:I${dataSheet.rows.length},">" &(5/24))`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#ff0000' } });
+    setCell(17, 3, dashboardSheet, { formula: `=COUNTIFS(Data!I6:I${dataSheet.rows.length},">" &(8/24))`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#ff0000' } });
     //high ot data
-    setCell(18, 3, dashboardSheet, { value: '>5 hrs OT/month', colSpan: 2, style: subHeaderStyle, image: highOtEmployeeImage });
+    setCell(18, 3, dashboardSheet, { value: '>8 hrs OT/month', colSpan: 2, style: subHeaderStyle, image: highOtEmployeeImage });
     //high leave employees
     setCell(17, 6, dashboardSheet, { formula: `=COUNTIFS(Data!J6:J${dataSheet.rows.length},">2")`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#ff0000' } });
     //high leave data
-    setCell(18, 6, dashboardSheet, { value: '>5 leave days', colSpan: 2, style: subHeaderStyle, image: highLeaveEmployeeImage });
+    setCell(18, 6, dashboardSheet, { value: '>2 leave days', colSpan: 2, style: subHeaderStyle, image: highLeaveEmployeeImage });
     //frequent late login
     setCell(17, 8, dashboardSheet, { formula: `=COUNTIFS(Data!K6:K${dataSheet.rows.length},">5")`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#F39C12' } });
     //frequent login data
     setCell(18, 8, dashboardSheet, { value: '>5 late logins', colSpan: 2, style: subHeaderStyle, image: LateLoginImage });
     //average net salary
-    setCell(17, 11, dashboardSheet, { formula: `=AVERAGE(${payrollSheetName}!M6:M${payrollSheet.rows.length})`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#7A3DB5' } });
+    setCell(17, 11, dashboardSheet, { formula: `=AVERAGE(${payrollSheetName}!M6:M${payrollSheet.rows.length})`, colSpan: 2, format:'$#,##0_);($#,##0)', style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#7A3DB5' } });
     setCell(18, 11, dashboardSheet, { value: 'Avg Employee Salary', colSpan: 2, style: subHeaderStyle, image: averageNetSalaryImage });
     //pf contribution
-    setCell(17, 13, dashboardSheet, { formula: `=SUM(${payrollSheetName}!J6:J${payrollSheet.rows.length})`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#7A3DB5' } });
-    setCell(18, 13, dashboardSheet, { value: 'Overall Social Contribution', colSpan: 2, style: subHeaderStyle, image: socialContributionImage });
+    setCell(17, 13, dashboardSheet, { formula: `=SUM(${payrollSheetName}!J6:J${payrollSheet.rows.length})`, colSpan: 2, format:'$#,##0_);($#,##0)', style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#7A3DB5' } });
+    setCell(18, 13, dashboardSheet, { value: 'Overall Employee Contribution', colSpan: 2, style: subHeaderStyle, image: socialContributionImage });
     //total deduction
-    setCell(17, 15, dashboardSheet, { formula: `=SUM(${payrollSheetName}!H6:H${payrollSheet.rows.length}) + SUM(${payrollSheetName}!J6:J${payrollSheet.rows.length})`, colSpan: 2, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#7A3DB5' } });
-    setCell(18, 15, dashboardSheet, { value: 'Social Contribution + Tax', colSpan: 2, style: subHeaderStyle, image: totalDeductionImage });
+    setCell(17, 15, dashboardSheet, { formula: `=SUM(${payrollSheetName}!H6:H${payrollSheet.rows.length}) + SUM(${payrollSheetName}!J6:J${payrollSheet.rows.length}) + SUM(${payrollSheetName}!L6:L${payrollSheet.rows.length})`, colSpan: 2, format:'$#,##0_);($#,##0)', style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#7A3DB5' } });
+    setCell(18, 15, dashboardSheet, { value: 'Employee Contribution + Tax', colSpan: 2, style: subHeaderStyle, image: totalDeductionImage });
     //OT cost % of payroll
-    setCell(17, 18, dashboardSheet, { formula: `=SUM(${payrollSheetName}!F6:F${payrollSheet.rows.length})/SUM(${payrollSheetName}!M6:M${payrollSheet.rows.length})`, colSpan: 3, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#F57C1F' } });
+    setCell(17, 18, dashboardSheet, { formula: `=SUM(${payrollSheetName}!F6:F${payrollSheet.rows.length})/E3`, colSpan: 3, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '12pt', backgroundColor: '#fff', fontWeight: 'bold', color:'#F57C1F' } });
     setCell(18, 18, dashboardSheet, { formula: `=IF(S18>0.10,"Above Ideal 10%","Below Ideal 10%")`, colSpan: 3, style: subHeaderStyle, image: OtpercentImage });
     setCell(20, 1, dashboardSheet, { value: 'TOP EMPLOYEE RISK SUMMARY', colSpan: 13, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '14pt', backgroundColor: '#1F2A44', color: '#fff', fontWeight: 'bold' } });
     spreadsheet.conditionalFormat({ type: 'EqualTo', value: 'High', range: `${dashboardSheetName}!J23:J27`, format: { style: { color: '#ff0000', fontWeight: 'bold' } } });
@@ -502,13 +504,13 @@ export default function App() {
               setCell(22 + colNumber, 6, dashboardSheet, { formula: `=Data!J${6 + colNumber}`, style: employeeDataStyle });
               setCell(22 + colNumber, 7, dashboardSheet, { formula: `=Data!K${6 + colNumber}`, style: employeeDataStyle });
               setCell(22 + colNumber, 8, dashboardSheet, { formula: `=Data!L${6 + colNumber}`, style: employeeDataStyle });
-              setCell(22 + colNumber, 9, dashboardSheet, { formula: `=IF(I${rowNumber + 1}>70,"High",IF(I${rowNumber + 1}>=50,"Medium","Low"))`, style: employeeDataStyle });
+              setCell(22 + colNumber, 9, dashboardSheet, { formula: `=IF(I${rowNumber + 1}>70,"High",IF(I${rowNumber + 1}>=45,"Medium","Low"))`, style: employeeDataStyle });
               if (colNumber < 3) {
-                setCell(22 + colNumber, 10, dashboardSheet, { formula: `=CONCAT( IF(E${rowNumber + 1}>5/24,"High OT"&IF(OR(G${rowNumber + 1}>2,H${rowNumber + 1}>3,F${rowNumber + 1}<7.5/24)," + ",""),""),IF(G${rowNumber + 1}>2,"High Leave"&IF(OR(H${rowNumber + 1}>3,F${rowNumber + 1}<7/24)," + ",""),""),
-                IF(H${rowNumber + 1}>3,&"Frequent Late"&IF(F${rowNumber + 1}<7.5/24," + ",""),""), IF(F${rowNumber + 1}<7.5/24,&"Low Work Hours",""))`, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '11pt', backgroundColor: '#fff', color: '#ff0000', fontWeight: 'bold' }, colSpan: 4 });
+                setCell(22 + colNumber, 10, dashboardSheet, { formula: `=CONCAT( IF(E${rowNumber + 1}>6/24,"High OT"&IF(OR(G${rowNumber + 1}>2,H${rowNumber + 1}>3,F${rowNumber + 1}<8/24)," + ",""),""),IF(G${rowNumber + 1}>2,"High Leave"&IF(OR(H${rowNumber + 1}>3,F${rowNumber + 1}<8/24)," + ",""),""),
+                IF(H${rowNumber + 1}>3,"Frequent Late"&IF(F${rowNumber + 1}<8/24," + ",""),""), IF(F${rowNumber + 1}<8/24,&"Low Work Hours",""))`, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '11pt', backgroundColor: '#fff', color: '#ff0000', fontWeight: 'bold' }, colSpan: 4 });
               } else {
-                setCell(22 + colNumber, 10, dashboardSheet, { formula: `=CONCAT( IF(E${rowNumber + 1}>5/24,"High OT"&IF(OR(G${rowNumber + 1}>2,H${rowNumber + 1}>3,F${rowNumber + 1}<7.5/24)," + ",""),""),IF(G${rowNumber + 1}>2,"High Leave"&IF(OR(H${rowNumber + 1}>3,F${rowNumber + 1}<7/24)," + ",""),""),
-                IF(H${rowNumber + 1}>3,&"Frequent Late"&IF(F${rowNumber + 1}<7.5/24," + ",""),""), IF(F${rowNumber + 1}<7.5/24,&"Low Work Hours",""))`, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '11pt', backgroundColor: '#fff', color: '#ffc000', fontWeight: 'bold' }, colSpan: 4 });
+                setCell(22 + colNumber, 10, dashboardSheet, { formula: `=CONCAT( IF(E${rowNumber + 1}>6/24,"High OT"&IF(OR(G${rowNumber + 1}>2,H${rowNumber + 1}>3,F${rowNumber + 1}<8/24)," + ",""),""),IF(G${rowNumber + 1}>2,"High Leave"&IF(OR(H${rowNumber + 1}>3,F${rowNumber + 1}<8/24)," + ",""),""),
+                IF(H${rowNumber + 1}>3,"Frequent Late"&IF(F${rowNumber + 1}<8/24," + ",""),""), IF(F${rowNumber + 1}<8/24,&"Low Work Hours",""))`, style: { textAlign: 'center', verticalAlign: 'middle', fontSize: '11pt', backgroundColor: '#fff', color: '#ffc000', fontWeight: 'bold' }, colSpan: 4 });
               }
               index++;
               rowNumber++;
@@ -531,7 +533,7 @@ export default function App() {
     },50);
 
     //initiating chart models
-    const payrollCostByDeptChart: ChartModel[] = [{ type: 'Bar', range: 'Data!A3:B7', title: 'PAYROLL COST BY DEPARTMENT', theme: 'Tailwind3', left: 30, top: 120, width: 475, height: 292, isSeriesInRows: false, primaryYAxis: { visible: false }, dataLabelSettings: { visible: true, position: 'Middle' }, legendSettings: { position: 'Right' } }];
+    const payrollCostByDeptChart: ChartModel[] = [{ type: 'Bar', range: 'Data!A3:B7', title: 'PAYROLL COST BY DEPARTMENT', theme: 'Tailwind3', left: 30, top: 120, width: 475, height: 292, isSeriesInRows: false, primaryYAxis: { visible: false }, dataLabelSettings: { visible: true, position: 'Outer' }, legendSettings: { position: 'Right' } }];
     const overtimeDistributionChart: ChartModel[] = [{ type: 'Doughnut', range: 'Data!C4:D6', title: 'OVERTIME DISTRIBUTION', theme: 'Tailwind3', left: 540, top: 120, width: 475, height: 292, isSeriesInRows: false, dataLabelSettings: { visible: true, position: 'Middle' }, legendSettings: { position: 'Right' } }];
     const leaveDistributionChart: ChartModel[] = [{ type: 'Doughnut', range: 'Data!A15:B17', title: 'LEAVE DISTRIBUTION', theme: 'Tailwind3', left: 1560, top: 120, width: 475, height: 292, isSeriesInRows: false, dataLabelSettings: { visible: true, position: 'Middle' }, legendSettings: { position: 'Right' } }];
     const averageWorkHourChart: ChartModel[] = [{ type: 'Column', range: 'Data!C9:D12', title: 'AVG WORK HOURS/DAY', theme: 'Tailwind3', left: 1050, top: 120, width: 475, height: 292, isSeriesInRows: false, dataLabelSettings: { visible: true, position: 'Outer' }, legendSettings: { position: 'Right' } }];
@@ -548,19 +550,19 @@ export default function App() {
   }
 
   return (
-  <div className='container'><SpreadsheetComponent
-    openUrl='https://document.syncfusion.com/web-services/spreadsheet-editor/api/spreadsheet/open'
-    saveUrl='https://document.syncfusion.com/web-services/spreadsheet-editor/api/spreadsheet/save'
-    ref={(ssObj: Spreadsheet) => { spreadsheet = ssObj }} created={onCreated.bind(this)}
-    dataSourceChanged={dataSourceChanged}
-    cellStyle={{ textAlign: 'center', verticalAlign: 'middle', backgroundColor:'#F5F7FB' }}
-  >
-  <SheetsDirective>
-    <SheetDirective name='Dashboard' showGridLines={false}></SheetDirective>
-    <SheetDirective name='Employee Master' showGridLines={false}></SheetDirective>
-    <SheetDirective name='Timesheet' showGridLines={false}></SheetDirective>
-    <SheetDirective name='Payroll' showGridLines={false}></SheetDirective>
-    <SheetDirective name='Data' state='Hidden'></SheetDirective>
-  </SheetsDirective>
-  </SpreadsheetComponent></div>);
+    <div className='container'><SpreadsheetComponent
+      openUrl='https://document.syncfusion.com/web-services/spreadsheet-editor/api/spreadsheet/open'
+      saveUrl='https://document.syncfusion.com/web-services/spreadsheet-editor/api/spreadsheet/save'
+      ref={(ssObj: Spreadsheet) => { spreadsheet = ssObj }} created={onCreated.bind(this)}
+      dataSourceChanged={dataSourceChanged}
+      cellStyle={{ textAlign: 'center', verticalAlign: 'middle', backgroundColor: '#F5F7FB' }}
+    >
+      <SheetsDirective>
+        <SheetDirective name='Dashboard' showGridLines={false}></SheetDirective>
+        <SheetDirective name='Employee Master' showGridLines={false}></SheetDirective>
+        <SheetDirective name='Timesheet' showGridLines={false}></SheetDirective>
+        <SheetDirective name='Payroll' showGridLines={false}></SheetDirective>
+        <SheetDirective name='Data' state='Hidden'></SheetDirective>
+      </SheetsDirective>
+    </SpreadsheetComponent></div>);
 }
