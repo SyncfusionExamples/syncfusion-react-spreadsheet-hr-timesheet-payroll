@@ -1,6 +1,6 @@
 # Syncfusion React Spreadsheet – HR Timesheet and Payroll Management Application
 
-This repository contains a complete showcase sample demonstrating how to build an **HR Timesheet and Payroll Management** workflow using the Syncfusion React Spreadsheet component. The sample illustrates how HR and finance teams can manage employee data, track attendance, process payroll and analyze workforce performance using an interactive spreadsheet-driven interface.
+This repository contains a complete showcase sample demonstrating how to build an **HR Timesheet and Payroll Management** workflow using the [React Spreadsheet](https://www.syncfusion.com/spreadsheet-editor-sdk/react-spreadsheet-editor) component. The sample illustrates how HR and finance teams can manage employee data, track attendance, process payroll and analyze workforce performance using an interactive spreadsheet-driven interface.
 
 ## 📁 Project Structure
 
@@ -32,12 +32,12 @@ This repository contains a complete showcase sample demonstrating how to build a
 - Applies conditional formatting, data bars, cell and number formattings to visually highlight important column metrics.
 - Delivers an interactive dashboard layer with charts and KPIs to visualize.
 - Enables real-time recalculation and dynamic updates, allowing users to interactively modify data and instantly view updated insights across all sheets.
-- Demonstrates how Syncfusion React Spreadsheet can serve as a lightweight HR analytics and payroll system, combining attendance tracking, payroll computation, and insights in a single interface.
+- Demonstrates how React Spreadsheet can serve as a lightweight HR analytics and payroll system, combining attendance tracking, payroll computation, and insights in a single interface.
 
 ## 🧩 Technologies Used
 
 - React
-- Syncfusion React Spreadsheet
+- React Spreadsheet
 
 ## 🚀 Getting Started
 
@@ -77,7 +77,7 @@ Your application will automatically run on a local development server and can be
 
 ## 📣 Try It Out
 
-Clone the repository, run the sample, and explore how Syncfusion React Spreadsheet can be used to build a complete **HR Timesheet and Payroll Management system** with real-time analytics and reporting capabilities.
+Clone the repository, run the sample, and explore how [React Spreadsheet](https://www.syncfusion.com/spreadsheet-editor-sdk/react-spreadsheet-editor) can be used to build a complete **HR Timesheet and Payroll Management system** with real-time analytics and reporting capabilities.
 
 ## 📄 License and Copyright
 
